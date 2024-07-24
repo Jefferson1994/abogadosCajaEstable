@@ -1,0 +1,475 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="wbfEstadoCobranzaJudicial.aspx.cs" Inherits="FinancialWeb.PrestamosWeb.wbfEstadoCobranzaJudicial"  StylesheetTheme="Financial" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>GESTIÓN DE COBRANZA LEGAL</title>
+    <link href="../packages/FontAwesome.4.7.0/Content/Content/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <script type="text/javascript" src="../JavaScript/General.js"></script>
+    <script type="text/javascript" src="../JavaScript/keycode.js"></script>
+    <script type="text/javascript" src="../JavaScript/UIF.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script language="javascript" src="../JavaScript/busquedaUniversal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="container-fluid  ">
+            <br />
+            <div class="panel-title mb-4">
+                <asp:Label ID="Label4" runat="server">GESTIÓN DE COBRANZA LEGAL</asp:Label>
+
+            </div>
+            <div class="panel-body">
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                 <asp:Label ID="lblOficina" runat="server">Abogado Asignado</asp:Label>
+                                 <asp:DropDownList runat="server" ID="ddlTodosLosAbogados"></asp:DropDownList>
+                                
+                            </div>
+                         <%--   <div class="col">
+                                <asp:Label ID="Label21" runat="server">Todos</asp:Label>
+                                <div class="col">
+                                    <asp:CheckBox ID="chkTodosAbogados" runat="server"/>
+                                </div>
+                                 
+                            </div>--%>
+                            <div class="col">
+                                 <asp:Label ID="Label1" runat="server">Número de Pagaré</asp:Label>
+                                <asp:TextBox ID="txtnumeroPagare" runat="server"  AutoPostBack="true" class="form-control"></asp:TextBox>
+                            </div>
+                          <%--  <div class="col">
+                                <asp:Label ID="Label2" runat="server">Todos</asp:Label>
+                                <div class="col">
+                                    <asp:CheckBox ID="chkTodosPagares" runat="server"  />
+                                 </div>
+                            </div>--%>
+                            <div class="col">
+                                 <div class="row">
+                                     <asp:LinkButton ID="lnkBtnConsultar"  CssClass="btn btn-sm btn-outline-info" OnClick="Consulta" Text='<i class="fas fa-search"></i> Consultar' runat="server" />
+                                  </div>
+                                 <div class="row">
+                                 <asp:LinkButton ID="lnkBtnLimpiar"  CssClass="btn btn-light" OnClick="limpiarTodo" Text='<i class="fa fa-trash-o"></i> Limpiar' runat="server" /> 
+                                 </div>
+                            </div>
+                        </div>
+
+                    </div>
+                   <div class="container">
+                       <br />
+                       <asp:Label ID="Label3" runat="server" Visible="false">Pagares Asignado</asp:Label>
+                       
+                       <div class="row">
+                            <div class="col-md-3">
+                                <br />
+                                    <asp:Repeater ID="RepeaterTablaPagares" runat="server">
+                                    <HeaderTemplate>
+                                        <table class="table">
+                                            <thead class="thead-green">
+                                                <tr >
+                                                    <th scope="col">Numero de Pagaré</th>
+                                                    <th scope="col">Opcion</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr style="margin-bottom: 5px;">
+                                            <td>
+                                                <asp:Label Text='<%# Eval("NumeroPagare") %>' runat="server" ID="Label9" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:LinkButton ID="lnkBtnLimpiar" OnClick="VerDeatelle1" CssClass="btn btn-light btn-pequeno" Text='<i class="fa fa-eye"></i> Ver' runat="server" /> 
+                                            </td>
+                                       
+                                  
+                                         
+                                        </tr>
+
+                                    </ItemTemplate>
+
+                                    <FooterTemplate>
+                                        </table>
+                                    </FooterTemplate>
+
+
+                                </asp:Repeater>
+
+                            </div>
+                            
+                           <div  class="col-md-9">
+                               <div class="contenedorVerDetalle1" id="VerDetalle1" visible="false" runat="server">
+                                    
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label5" runat="server">Número Cliente</asp:Label>
+                                         <asp:TextBox ID="txtNumeroCliente" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label6" runat="server">Nombre</asp:Label>
+                                             <asp:TextBox ID="txtNombreCliente" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                       
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label7" runat="server">Número de Identificación</asp:Label>
+                                         <asp:TextBox ID="txtNumeroIdentificacion" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label8" runat="server">Abogado Asignado</asp:Label>
+                                             <asp:TextBox ID="txtAbogadoAsigando" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         
+                                         </div>
+                                         
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label10" runat="server">Número de Pagare</asp:Label>
+                                         <asp:TextBox ID="txtnumeroPagareConsulta" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label11" runat="server">Número de Juicio</asp:Label>
+                                             <asp:TextBox ID="txtnumeroJuicio" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         
+                                         </div>
+                                         
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label12" runat="server">Deuda Inicial</asp:Label>
+                                         <asp:TextBox ID="txtdeudaInicial" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label13" runat="server">Fase Procesal Actual</asp:Label>
+                                             <asp:TextBox ID="txtfaseProceso" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         
+                                         </div>
+                                         
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label14" runat="server">Saldo Total</asp:Label>
+                                         <asp:TextBox ID="txtsaldoTotal" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label15" runat="server">Estado Actual</asp:Label>
+                                             <asp:TextBox ID="txtestadoACtual" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         
+                                         </div>
+                                         
+                                     </div>
+                                     <br />
+                                     <div class="row text-center">
+                                         <div class="col-md-6">
+                                           <asp:LinkButton ID="LinkButton1" OnClick="VerDeatalleTotal" CssClass="btn btn-sm btn-outline-info" runat="server"> <i class="fa fa-paperclip"></i> Ver Detalles</asp:LinkButton>
+                                           
+
+                                         </div>
+                                         <div class="col-md-6">
+                                           <asp:LinkButton ID="btnDocumentacionAdjunta" CssClass="btn btn-sm btn-outline-info" runat="server"> <i class="fa fa-paperclip"></i> Documentos Adjuntos</asp:LinkButton>  
+                                         
+                                         </div>
+                                         
+                                     </div>
+                                     <br />
+                                     <div class="row">
+                                         <div class="col-md-4">
+                                             <asp:Label ID="Label16" runat="server">Fecha de Ingreso Cobranza Judicial</asp:Label>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <asp:TextBox ID="txtfechaCobransaJudicial" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         
+                                     </div>
+
+                                    <div class="row">
+                                         <div class="col-md-4">
+                                             <asp:Label ID="Label17" runat="server">Fecha  Inicio Juicio</asp:Label>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <asp:TextBox ID="txtfechaInicioJucio" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         
+                                     </div>
+                                   <br />
+                                    <div class="row">
+                                         <div class="col-md-4">
+                                             <asp:Label ID="Label18" runat="server">Fecha Última Diligencia</asp:Label>
+                                         </div>
+                                         <div class="col-md-8">
+                                             <asp:TextBox ID="txtfehcaUltimaDiligencia" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         
+                                     </div>
+                                             
+                                        
+                                     
+                                         
+                                    
+                                </div>
+
+                           </div>
+                           
+                                
+                            
+                       </div>
+
+                   
+
+                   </div>
+                  
+                 <%--modal ver detalle--%>
+
+                 <div class="modal fade" id="miModalDetallePrestamo" tabindex="-1" role="dialog" aria-labelledby="modalTitulo" aria-hidden="true" data-backdrop="static">
+                      
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">ESTADO COBRANZA JUDICIAL ACTUAL</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Datos Fase Procesal</h4>
+                                <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label19" runat="server">Número Cliente</asp:Label>
+                                         <asp:TextBox ID="txtmodalNumeroCliente" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true" ></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label20" runat="server">Nombre</asp:Label>
+                                             <asp:TextBox ID="txtmodalNombreCliente" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                       
+                                  </div>
+                                <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label22" runat="server">Número de Identificación</asp:Label>
+                                         <asp:TextBox ID="txtModalIdentificacion" runat="server"  AutoPostBack="true" class="form-control" ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label23" runat="server">Nombre Garante</asp:Label>
+                                             <asp:DropDownList runat="server" ID="DropDownListNombresGarantes"></asp:DropDownList>
+                                         </div>
+                                       
+                                  </div>
+                                <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label24" runat="server">Abogado Asignado</asp:Label>
+                                         <asp:TextBox ID="txtModalAbogado" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label25" runat="server">Número Juicio</asp:Label>
+                                             <asp:TextBox ID="txtModalNumeroJuicio" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                       
+                                  </div>
+                                <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label26" runat="server">Fase Procesa Actual</asp:Label>
+                                         <asp:TextBox ID="txtModalFaseProcesal" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label27" runat="server">Estado Actual</asp:Label>
+                                             <asp:TextBox ID="txtModalEstadoActual" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                       
+                                  </div>
+                                <div class="row">
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label28" runat="server">Fecha Última Diligencia</asp:Label>
+                                         <asp:TextBox ID="txtModalUltimaDiligencia" runat="server"  AutoPostBack="true" class="form-control"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <asp:Label ID="Label29" runat="server">Detalle Última Diligencia</asp:Label>
+                                             <asp:TextBox ID="txtModalDetalleDiligencia" runat="server"  AutoPostBack="true" class="form-control" TextMode="MultiLine" Rows="4" Columns="50"  ReadOnly="true"></asp:TextBox>
+                                         </div>
+                                       
+                                  </div>
+
+                                 <div class="modal-footer">
+                                   <div style="text-align: left;">
+                                        <h4>Bienes</h4>
+                                    </div>
+
+                                
+                                 <asp:Repeater ID="RepeaterBienes" runat="server">
+                                    <HeaderTemplate>
+                                        <table class="table">
+                                            <thead class="thead-green">
+                                                <tr >
+                                                    <th scope="col">Tipo Bien</th>
+                                                    <th scope="col">Porcentaje</th>
+                                                    <th scope="col">Latitud</th>
+                                                    <th scope="col">Longitud</th>
+                                                    <th scope="col">Detalle Bien</th>
+                                                    <th scope="col">Avaluo</th>
+                                                    <th scope="col">Medidas Cautelares</th>
+                                                    <th scope="col">Fecha Remate Bien</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr style="margin-bottom: 5px;">
+                                            <td>
+                                                <asp:Label Text='<%# Eval("detalletipobien") %>' runat="server" ID="Label9" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("porcentaje") %>' runat="server" ID="Label36" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# String.Format("{0:F5}", Convert.ToDouble(Eval("latitud"))) %>' runat="server" ID="Label37" CssClass="texto-pequeno"/>
+
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# String.Format("{0:F5}", Convert.ToDouble(Eval("longitud"))) %>' runat="server" ID="Label2" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("detallebien") %>' runat="server" ID="Label39" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("avaluo") %>' runat="server" ID="Label40" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("medidasCautelare") %>' runat="server" ID="Label41" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# String.Format("{0:dd/MM/yyyy}", Eval("fechaInicioJuicio")) %>' runat="server" ID="Label42" CssClass="texto-pequeno"/>
+
+                                            </td>
+                                       
+                                  
+                                         
+                                        </tr>
+
+                                    </ItemTemplate>
+
+                                    <FooterTemplate>
+                                        </table>
+                                    </FooterTemplate>
+
+
+                                </asp:Repeater>
+                            </div>
+                             
+                               
+                               
+                            </div>
+                            <div class="modal-footer">
+                                 <div style="text-align: left;">
+                                        <h4>Historial</h4>
+                                    </div>
+                                <div>
+                                    <asp:Repeater ID="RepeaterHistorialCobranzaJudicial" runat="server">
+                                    <HeaderTemplate>
+                                        <table class="table">
+                                            <thead class="thead-green">
+                                                <tr >
+                                                    <th scope="col">Fecha Diligencia</th>
+                                                    <th scope="col">Fase Procesal</th>
+                                                    <th scope="col">Estado Procesal</th>
+                                                    <th scope="col">Detalle Diligencia</th>
+                                                    <th scope="col">Condiciones de Pago</th>
+                                                    <th scope="col">Numero Proceso</th>
+                                                    <th scope="col">Medidas Cautelares</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr style="margin-bottom: 5px;">
+                                            <td>
+                                                <asp:Label Text='<%# String.Format("{0:dd/MM/yyyy}", Eval("fechaDiligencia")) %>' runat="server" ID="Label42" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("Descripcion") %>' runat="server" ID="Label36" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("Descripcion1") %>' runat="server" ID="Label37" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("detallesdiligencia") %>' runat="server" ID="Label38" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("condicionesPago") %>' runat="server" ID="Label39" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("numeroProceso") %>' runat="server" ID="Label40" CssClass="texto-pequeno"/>
+                                            </td>
+                                            <td>
+
+                                                <asp:Label Text='<%# Eval("Descripcion2") %>' runat="server" ID="Label41" CssClass="texto-pequeno"/>
+                                            </td>
+                                        
+                                        </tr>
+
+                                    </ItemTemplate>
+
+                                    <FooterTemplate>
+                                        </table>
+                                    </FooterTemplate>
+
+
+                                </asp:Repeater>
+                                </div>
+
+                                 
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                 
+                 </div>
+                
+                    
+
+                
+            </div>
+        </div>
+    </form>
+</body>
+
+<style>
+    .btn-pequeno {
+        font-size: 12px; /* Ajusta el tamaño del texto según tus preferencias */
+        padding: 5px 10px; /* Ajusta el relleno del botón según tus preferencias */
+    }
+    .texto-pequeno {
+    font-size: 12px; /* Ajusta el tamaño del texto según tus preferencias */
+    }
+     .contenedorVerDetalle1 {
+            margin: 20px; /* Ajusta el valor del margen según tus preferencias */
+            padding: 10px; /* Ajusta el valor del relleno según tus preferencias */
+            background-color: #f0f0f0; /* Color de fondo gris */
+        }
+  
+</style>
+</html>
